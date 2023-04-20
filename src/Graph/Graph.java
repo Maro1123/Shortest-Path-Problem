@@ -37,6 +37,8 @@ public class Graph {
         return false;
     }
 
+
+
     boolean floydWarshall(int[][] costs, int[][] parents) {
         int n = costs.length;
         for (int k = 0; k < n; k++) {
@@ -49,7 +51,9 @@ public class Graph {
                 }
             }
         }
-        
+        for (int i = 0; i < n; i++)
+            if (costs[i][i] < 0)
+                return false;
         return true;
     }
 
