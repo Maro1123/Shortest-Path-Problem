@@ -71,8 +71,4 @@ public class Graph {
         return true;
     }
 
-    public static void main(String[] args) {
-        Graph g = new Graph("example.txt");
-        System.out.println("hello");
-    }
 }
