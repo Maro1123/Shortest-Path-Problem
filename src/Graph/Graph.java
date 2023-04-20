@@ -6,21 +6,25 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Graph {
-    ArrayList<ArrayList<Edge>> adjList;
+    ArrayList<Edge>[] adjList;
+    int size;
 
     public Graph(String filename){
         try{
             Scanner scan = new Scanner(new File(filename));
             int v, e, start, dest, w;
             v = scan.nextInt();
-            adjList = new ArrayList<>();
-            for(int i=0 ; i<v ; i++) adjList.add(new ArrayList<>());
+            adjList = new ArrayList[v];
+            for (int i = 0; i < v; i++) {
+                adjList[i] = new ArrayList<Edge>();
+            }
+            size = v;
             e = scan.nextInt();
             for (int i=0 ; i<e ; i++){
                 start = scan.nextInt();
                 dest = scan.nextInt();
                 w = scan.nextInt();
-                adjList.get(start).add(new Edge(dest, w));
+                adjList[start].add(new Edge(dest, w));
             }
             scan.close();
         }catch(Exception e){
@@ -28,7 +32,7 @@ public class Graph {
         }
     }
 
-    void dijkestra(int source, int[] costs, int[] parents){
+    void dijkstra(int source, int[] costs, int[] parents){
         //TODO
     }
 
