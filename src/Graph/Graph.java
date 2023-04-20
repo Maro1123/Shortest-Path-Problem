@@ -38,7 +38,7 @@ public class Graph {
         }
     }
 
-    void dijkstra(int source, int[] costs, int[] parents){
+    public void dijkstra(int source, int[] costs, int[] parents){
         //TODO
     }
 
@@ -64,7 +64,7 @@ public class Graph {
     boolean floydWarshall() {
         int[][] costs = new int[size][size], parents = new int[size][size];
         for(int[] arr : costs)
-            Arrays.fill(arr, MAX);
+            Arrays.fill(arr, Integer.MAX_VALUE);
         for(int i = 0; i < size; i++) {
             costs[i][i] = 0;
             for(Edge edge : adjList[i])
@@ -73,11 +73,18 @@ public class Graph {
         return floydWarshall(costs, parents);
     }
 
-    boolean floydWarshall(int[][] costs, int[][] parents) {
+    public void fillAdjMatrix(int[][] matrix){
+        for(int[] row : matrix) Arrays.fill(row,Integer.MAX_VALUE);
+        for(int i=0 ; i<adjList.length ; i++){
+            for(Edge edge : adjList[i]) matrix[i][edge.to] = edge.weight;
+        }
+    }
+
+    public boolean floydWarshall(int[][] costs, int[][] parents) {
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if (costs[i][k] != MAX && costs[k][j] != MAX && costs[i][k] + costs[k][j] < costs[i][j]) {
+                    if (costs[i][k] != Integer.MAX_VALUE && costs[k][j] != Integer.MAX_VALUE && costs[i][k] + costs[k][j] < costs[i][j]) {
                         costs[i][j] = costs[i][k] + costs[k][j];
                         parents[i][j] = k;
                     }
@@ -112,4 +119,6 @@ public class Graph {
 
         bellmanFord(source, costs, parents);
     }
+
+    public int getSize() {return adjList.length;}
 }
