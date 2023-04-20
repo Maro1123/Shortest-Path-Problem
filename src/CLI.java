@@ -49,7 +49,7 @@ public class CLI {
                 //Bellman method call
                 break;
             case 3:
-                currentGraph.fillAdjMatrix(pairCosts);
+//                currentGraph.fillAdjMatrix(pairCosts);
                 currentGraph.floydWarshall(pairCosts, pairParents);
                 break;
         }
