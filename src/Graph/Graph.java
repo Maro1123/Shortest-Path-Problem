@@ -33,7 +33,7 @@ public class Graph {
         }
     }
 
-    void dijkstra(int source, int[] costs){
+     void dijkstra(int source, int[] costs, int[] parents){
         PriorityQueue<Edge> pq = new PriorityQueue<>();
 
         for (int i = 0; i < size; i++) {
@@ -42,13 +42,14 @@ public class Graph {
 
         costs[source] = 0;
         pq.add(new Edge(source, costs[source]));
-
+        parents[source] = -1; //source
         while (!pq.isEmpty()){
             Edge cur = pq.poll();
             for (Edge i : adjList[cur.getTo()]) {
                 if(costs[i.getTo()] > costs[cur.getTo()] + i.getWeight()){
                     costs[i.getTo()] = costs[cur.getTo()] + i.getWeight();
                     pq.add(new Edge(i.getTo(), costs[i.getTo()]));
+                    parents[i.getTo()] = cur.getTo();
                 }
             }
         }
@@ -83,10 +84,14 @@ public class Graph {
         Graph g = new Graph("di.txt");
         System.out.println("hello");
         int[] dis = new int[g.size];
-        g.dijkstra(0,dis);
+        int[] parent = new int[g.size];
+        g.dijkstra(0,dis,parent);
         for (int i : dis) {
             System.out.print(i +" ");
         }
         System.out.println();
+        for (int i : parent) {
+            System.out.print(i +" ");
+        }
     }
 }
