@@ -28,7 +28,7 @@ public class Graph {
         }
     }
 
-    void dijkestra(int source, int[] costs, int[] parents){
+    void dijkstra(int source, int[] costs, int[] parents){
         //TODO
     }
 
