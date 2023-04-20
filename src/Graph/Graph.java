@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Graph {
     ArrayList<Edge>[] adjList;
     int size;
+    final int MAX = Integer.MAX_VALUE;
     
     // will be removed on removing bellman_init()
     public int[] costs, parents;
@@ -38,18 +39,37 @@ public class Graph {
         }
     }
 
-    public void dijkstra(int source, int[] costs, int[] parents){
-        //TODO
+    void dijkstra(int source, int[] costs){
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+
+        for (int i = 0; i < size; i++) {
+            costs[i] = Integer.MAX_VALUE;
+        }
+
+        costs[source] = 0;
+        pq.add(new Edge(source, costs[source]));
+
+        while (!pq.isEmpty()){
+            Edge cur = pq.poll();
+            for (Edge i : adjList[cur.getTo()]) {
+                if(costs[i.getTo()] > costs[cur.getTo()] + i.getWeight()){
+                    costs[i.getTo()] = costs[cur.getTo()] + i.getWeight();
+                    pq.add(new Edge(i.getTo(), costs[i.getTo()]));
+                }
+            }
+        }
     }
 
     private boolean bellmanFord(int source, int[] costs, int[] parents){
         boolean negCycle = false;
 
         for(int i = 0; i < adjList.length; i++) { // O(m * n)
+            boolean changed = false;
             for(int j = 0; j < adjList.length; j++) { // parents
                 for(Edge edge: adjList[j]) { // neighbours
                     int u = edge.to, w = edge.weight;
                     if(costs[j] != Integer.MAX_VALUE && costs[j] + w < costs[u]) {
+                        changed = true;
                         if(i == adjList.length - 1)
                             negCycle = true;
                         costs[u] = costs[j] + w;
@@ -57,6 +77,7 @@ public class Graph {
                     }
                 }
             }
+            if(!changed) break;
         }
         return negCycle;
     }
@@ -97,12 +118,7 @@ public class Graph {
         return true;
     }
 
-    public static void main(String[] args) {
-        Graph g = new Graph("example.txt");
-        System.out.println("hello");
-    }
-    
-    public void bellman_init(int source) {
+    public boolean bellman_init(int source) {
         this.costs = new int[adjList.length];
         this.parents = new int[adjList.length];
 
@@ -117,7 +133,7 @@ public class Graph {
         costs[source] = 0;
         parents[source] = -1;
 
-        bellmanFord(source, costs, parents);
+        return bellmanFord(source, costs, parents);
     }
 
     public int getSize() {return adjList.length;}
