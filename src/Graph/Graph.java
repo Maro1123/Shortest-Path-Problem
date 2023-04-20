@@ -39,8 +39,25 @@ public class Graph {
         }
     }
 
-    void dijkstra(int source, int[] costs, int[] parents){
-        //TODO
+    void dijkstra(int source, int[] costs){
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+
+        for (int i = 0; i < size; i++) {
+            costs[i] = Integer.MAX_VALUE;
+        }
+
+        costs[source] = 0;
+        pq.add(new Edge(source, costs[source]));
+
+        while (!pq.isEmpty()){
+            Edge cur = pq.poll();
+            for (Edge i : adjList[cur.getTo()]) {
+                if(costs[i.getTo()] > costs[cur.getTo()] + i.getWeight()){
+                    costs[i.getTo()] = costs[cur.getTo()] + i.getWeight();
+                    pq.add(new Edge(i.getTo(), costs[i.getTo()]));
+                }
+            }
+        }
     }
 
     private boolean bellmanFord(int source, int[] costs, int[] parents){
