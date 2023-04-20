@@ -40,7 +40,7 @@ public class Graph {
         }
     }
 
-    void dijkstra(int source, int[] costs){
+    void dijkstra(int source, int[] costs, int[] parents){
         PriorityQueue<Edge> pq = new PriorityQueue<>();
 
         for (int i = 0; i < size; i++) {
@@ -49,6 +49,7 @@ public class Graph {
 
         costs[source] = 0;
         pq.add(new Edge(source, costs[source]));
+        parents[source] = -1; // -1 for the source node (has no parent)
 
         while (!pq.isEmpty()){
             Edge cur = pq.poll();
@@ -56,6 +57,7 @@ public class Graph {
                 if(costs[i.getTo()] > costs[cur.getTo()] + i.getWeight()){
                     costs[i.getTo()] = costs[cur.getTo()] + i.getWeight();
                     pq.add(new Edge(i.getTo(), costs[i.getTo()]));
+                    parents[i.getTo()] = cur.getTo();
                 }
             }
         }
@@ -68,7 +70,7 @@ public class Graph {
             boolean changed = false;
             for(int j = 0; j < adjList.length; j++) { // parents
                 for(Edge edge: adjList[j]) { // neighbours
-                    int u = edge.to, w = edge.weight;
+                    int u = edge.getTo(), w = edge.getWeight();
                     if(costs[j] != Integer.MAX_VALUE && costs[j] + w < costs[u]) {
                         changed = true;
                         if(i == adjList.length - 1)
@@ -90,7 +92,7 @@ public class Graph {
         for(int i = 0; i < size; i++) {
             costs[i][i] = 0;
             for(Edge edge : adjList[i])
-                costs[i][edge.to] = edge.weight;
+                costs[i][edge.getTo()] = edge.getWeight();
         }
         return floydWarshall(costs, parents);
     }
@@ -98,7 +100,7 @@ public class Graph {
     public void fillAdjMatrix(int[][] matrix){
         for(int[] row : matrix) Arrays.fill(row,Integer.MAX_VALUE);
         for(int i=0 ; i<adjList.length ; i++){
-            for(Edge edge : adjList[i]) matrix[i][edge.to] = edge.weight;
+            for(Edge edge : adjList[i]) matrix[i][edge.getTo()] = edge.getWeight();
         }
     }
 
@@ -138,4 +140,5 @@ public class Graph {
     }
 
     public int getSize() {return adjList.length;}
+
 }

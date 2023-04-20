@@ -1,8 +1,8 @@
 package Graph;
 
 public class Edge implements Comparable<Edge>{
-    public int to;
-    public int weight;
+    private int to;
+    private int weight;
     public Edge(int to, int weight){
         this.to = to;
         this.weight = weight;
