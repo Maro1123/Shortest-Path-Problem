@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Graph {
     ArrayList<Edge>[] adjList;
     int size;
+    final int MAX = Integer.MAX_VALUE;
     
     // will be removed on removing bellman_init()
     public int[] costs, parents;
@@ -90,11 +91,6 @@ public class Graph {
         return true;
     }
 
-    public static void main(String[] args) {
-        Graph g = new Graph("example.txt");
-        System.out.println("hello");
-    }
-    
     public void bellman_init(int source) {
         this.costs = new int[adjList.length];
         this.parents = new int[adjList.length];
