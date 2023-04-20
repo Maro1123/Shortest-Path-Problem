@@ -47,10 +47,12 @@ public class Graph {
         boolean negCycle = false;
 
         for(int i = 0; i < adjList.length; i++) { // O(m * n)
+            boolean changed = false;
             for(int j = 0; j < adjList.length; j++) { // parents
                 for(Edge edge: adjList[j]) { // neighbours
                     int u = edge.to, w = edge.weight;
                     if(costs[j] != Integer.MAX_VALUE && costs[j] + w < costs[u]) {
+                        changed = true;
                         if(i == adjList.length - 1)
                             negCycle = true;
                         costs[u] = costs[j] + w;
@@ -58,6 +60,7 @@ public class Graph {
                     }
                 }
             }
+            if(!changed) break;
         }
         return negCycle;
     }
@@ -91,7 +94,7 @@ public class Graph {
         return true;
     }
 
-    public void bellman_init(int source) {
+    public boolean bellman_init(int source) {
         this.costs = new int[adjList.length];
         this.parents = new int[adjList.length];
 
@@ -106,6 +109,6 @@ public class Graph {
         costs[source] = 0;
         parents[source] = -1;
 
-        bellmanFord(source, costs, parents);
+        return bellmanFord(source, costs, parents);
     }
 }
