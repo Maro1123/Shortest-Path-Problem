@@ -101,6 +101,7 @@ public class Graph {
     }
 
     private void floyd_init(int[][] costs, int[][] parents) {
+        
         for(int[] arr : costs)
             Arrays.fill(arr, Integer.MAX_VALUE);
         for(int i = 0; i < size; i++) {
