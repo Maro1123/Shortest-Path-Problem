@@ -1,6 +1,7 @@
 package Graph;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Arrays;
@@ -11,27 +12,23 @@ public class Graph {
     private ArrayList<Edge>[] adjList;
     private int size;
 
-    public Graph(String filename) {
-        try{
-            Scanner scan = new Scanner(new File(filename));
-            int v, e, start, dest, w;
-            v = scan.nextInt();
-            adjList = new ArrayList[v];
-            for (int i = 0; i < v; i++) {
-                adjList[i] = new ArrayList();
-            }
-            size = v;
-            e = scan.nextInt();
-            for (int i = 0; i < e; i++) {
-                start = scan.nextInt();
-                dest = scan.nextInt();
-                w = scan.nextInt();
-                adjList[start].add(new Edge(dest, w));
-            }
-            scan.close();
-        }catch(Exception e){
-            System.out.println("nope");
+    public Graph(String filename) throws FileNotFoundException {
+        Scanner scan = new Scanner(new File(filename));
+        int v, e, start, dest, w;
+        v = scan.nextInt();
+        adjList = new ArrayList[v];
+        for (int i = 0; i < v; i++) {
+            adjList[i] = new ArrayList();
         }
+        size = v;
+        e = scan.nextInt();
+        for (int i = 0; i < e; i++) {
+            start = scan.nextInt();
+            dest = scan.nextInt();
+            w = scan.nextInt();
+            adjList[start].add(new Edge(dest, w));
+        }
+        scan.close();
     }
 
     public void dijkstra(int source, int[] costs, int[] parents) {
@@ -111,13 +108,6 @@ public class Graph {
                 parents[i][edge.getTo()] = i;
                 costs[i][edge.getTo()] = edge.getWeight();
             }
-        }
-    }
-
-    public void fillAdjMatrix(int[][] matrix) {
-        for(int[] row : matrix) Arrays.fill(row,Integer.MAX_VALUE);
-        for(int i = 0 ; i < size ; i++){
-            for(Edge edge : adjList[i]) matrix[i][edge.getTo()] = edge.getWeight();
         }
     }
 
