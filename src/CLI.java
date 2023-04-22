@@ -208,7 +208,7 @@ public class CLI {
         path.push(singleSource);
         //Pop the path back in correct order
         System.out.print("Shortest path from node " + singleSource + " to node " + dest + ": ");
-        while(!path.empty()) System.out.print(path.pop() + " ");
+        while(!path.empty()) System.out.print(path.pop() + (path.size() > 0 ? " -> " : ""));
         System.out.println();
     }
 
@@ -230,7 +230,7 @@ public class CLI {
         path.push(source);
         //Pop the path back in correct order
         System.out.print("Shortest path from node " + source + " to node " + dest + ": ");
-        while(!path.empty()) System.out.print(path.pop() + " ");
+        while(!path.empty()) System.out.print(path.pop() + (path.size() > 0 ? " -> " : ""));
         System.out.println();
     }
 }
