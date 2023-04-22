@@ -1,9 +1,6 @@
 import Graph.Graph;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -55,8 +52,13 @@ public class CLI {
     public void mainMenu(){
         int choice;
         while(true){
-            System.out.println("\nChoose the operation you want to run:\n" +
-                    " 1. Shortest path from a single node \n 2. Shortest path between all nodes \n 3. Check for negative cycles \n 4. Exit");
+            System.out.println("""
+                    
+                    Choose the operation you want to run:
+                     1. Shortest path from a single node\s
+                     2. Shortest path between all nodes\s
+                     3. Check for negative cycles\s
+                     4. Exit""");
             try {
                 choice = sc.nextInt();
                 if (choice == 1) {
@@ -85,8 +87,12 @@ public class CLI {
         int choice;
         System.out.print("Please enter the source node: ");
         singleSource = sc.nextInt();
-        System.out.println("\nChoose the method you would like to run to find all shortest paths from this node:" +
-                            "\n 1. Dijkstra \n 2. Bellman-Ford \n 3. Floyd-Warshall");
+        System.out.println("""
+                
+                Choose the method you would like to run to find all shortest paths from this node:
+                 1. Dijkstra\s
+                 2. Bellman-Ford\s
+                 3. Floyd-Warshall""");
         while(true) {
             try{
                 choice = sc.nextInt();
@@ -104,8 +110,12 @@ public class CLI {
     // Changes state to APSP
     public void getAllShortestPaths(){
         int choice;
-        System.out.println("Choose the method you would like to run to find all shortest paths between all pairs of nodes:" +
-                "\n 1. Dijkstra \n 2. Bellman-Ford \n 3. Floyd-Warshall");
+        System.out.println("""
+                
+                Choose the method you would like to run to find all shortest paths between all pairs of nodes:
+                 1. Dijkstra\s
+                 2. Bellman-Ford\s
+                 3. Floyd-Warshall""");
         while(true) {
             try{
                 choice = sc.nextInt();
@@ -138,8 +148,11 @@ public class CLI {
     public void checkNegativeCycles(){
         int choice;
         boolean negCycles;
-        System.out.println("Choose the method you would like to run to check if there are negative cycles:" +
-                "\n 1. Bellman-Ford \n 2. Floyd-Warshall");
+        System.out.println("""
+                
+                Choose the method you would like to run to check if there are negative cycles:
+                 1. Bellman-Ford\s
+                 2. Floyd-Warshall""");
         while(true) {
             try{
                 choice = sc.nextInt();
@@ -160,15 +173,21 @@ public class CLI {
     // Get distance from a predefined source to a destination
     public void sourceDistance(int dest) throws Exception{
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
-        int[] p = (state == State.SSSP)? parents : pairParents[singleSource];
-        System.out.println("Distance from node " + singleSource + " to node " + dest + " = " + p[dest]);
+        int[] c = (state == State.SSSP)? costs : pairCosts[singleSource];
+        if(c[dest] == Integer.MAX_VALUE)
+            System.out.println("There is no path from node " + singleSource + " to node " + dest);
+        else
+            System.out.println("Distance from node " + singleSource + " to node " + dest + " = " + c[dest]);
     }
 
     // Get distance from any source to any destination
     public void pairDistance(int source, int dest) throws Exception{
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         if(source<0 || source>=currentGraph.getSize()) throw new Exception();
-        System.out.println("Distance from node " + source + " to node " + dest + " = " + pairCosts[source][dest]);
+        if(pairCosts[source][dest] == Integer.MAX_VALUE)
+            System.out.println("There is no path from node " + singleSource + " to node " + dest);
+        else
+            System.out.println("Distance from node " + source + " to node " + dest + " = " + pairCosts[source][dest]);
     }
 
     // Get path from a predefined source to a destination
@@ -177,6 +196,10 @@ public class CLI {
         int[] p = (state == State.SSSP)? parents : pairParents[singleSource];
         Stack<Integer> path = new Stack<>();
         int current = dest;
+        if(p[current] == -1 && current != singleSource) {   //check for path non-existence
+            System.out.println("There is no path from node " + singleSource + " to node " + dest);
+            return;
+        }
         //Push the path in reverse order in the stack
         do{
             path.push(current);
@@ -184,8 +207,9 @@ public class CLI {
         }while(current != singleSource);
         path.push(singleSource);
         //Pop the path back in correct order
-        System.out.println("Shortest path from node " + singleSource + " to node " + dest + ":");
-        while(!path.empty()) System.out.println(path.pop());
+        System.out.print("Shortest path from node " + singleSource + " to node " + dest + ": ");
+        while(!path.empty()) System.out.print(path.pop() + " ");
+        System.out.println();
     }
 
     // Get path from any source to any destination
@@ -194,6 +218,10 @@ public class CLI {
         if(source<0 || source>=currentGraph.getSize()) throw new Exception();
         Stack<Integer> path = new Stack<>();
         int current = dest;
+        if(pairParents[source][current] == -1 && current != source) {   //check for path non-existence
+            System.out.println("There is no path from node " + source + " to node " + dest);
+            return;
+        }
         //Push the path in reverse order in the stack
         do{
             path.push(current);
@@ -201,7 +229,8 @@ public class CLI {
         }while(current != source);
         path.push(source);
         //Pop the path back in correct order
-        System.out.println("Shortest path from node " + source + " to node " + dest + ":");
-        while(!path.empty()) System.out.println(path.pop());
+        System.out.print("Shortest path from node " + source + " to node " + dest + ": ");
+        while(!path.empty()) System.out.print(path.pop() + " ");
+        System.out.println();
     }
 }

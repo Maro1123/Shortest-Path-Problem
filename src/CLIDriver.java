@@ -13,8 +13,11 @@ public class CLIDriver {
                 if(cli.getState() == State.INIT){
                     cli.mainMenu();
                 }else if (cli.getState() == State.SSSP || cli.getState() == State.FSSSP) {
-                    System.out.println("\n 1. Get distance between source and target node \n 2. Get the shortest path from source to target node"
-                            + "\n 3. Main Menu");
+                    System.out.println("""
+
+                            1. Get distance between source and target node\s
+                            2. Get the shortest path from source to target node
+                            3. Main Menu""".indent(1));
                     choice = sc.nextInt();
                     System.out.print("Enter the target node: ");
                     dest = sc.nextInt();
@@ -25,8 +28,11 @@ public class CLIDriver {
                         default -> System.out.println("Invalid input! Try again.");
                     }
                 }else if (cli.getState() == State.APSP){
-                    System.out.println("\n 1. Get distance between two nodes \n 2. Get the shortest path from one node to another"
-                            + "\n 3. Main Menu");
+                    System.out.println("""
+
+                            1. Get distance between two nodes\s
+                            2. Get the shortest path from one node to another
+                            3. Main Menu""".indent(1));
                     choice = sc.nextInt();
                     System.out.print("Enter the start node: ");
                     src = sc.nextInt();
