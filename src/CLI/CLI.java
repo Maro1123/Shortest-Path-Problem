@@ -77,6 +77,14 @@ public class CLI {
                     checkNegativeCycles();
                     break;
                 } else if (choice == 4){
+                    System.out.println("  ____              ");
+                    System.out.println(" |  _ \\                 _____");
+                    System.out.println(" | |_) |_   _  ___     /     \\");
+                    System.out.println(" |  _ <| | | |/ _ \\   |  ^  ^ |");
+                    System.out.println(" | |_) | |_| |  __/   |  \\__/ |");
+                    System.out.println(" |____/ \\__, |\\___|    \\_____/");
+                    System.out.println("         __/ |      ");
+                    System.out.println("        |___/       ");
                     System.exit(0);
                 } else {
                     System.out.println("Invalid input! try again.");
