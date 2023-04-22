@@ -185,7 +185,7 @@ public class CLI {
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         if(source<0 || source>=currentGraph.getSize()) throw new Exception();
         if(pairCosts[source][dest] == Integer.MAX_VALUE)
-            System.out.println("There is no path from node " + singleSource + " to node " + dest);
+            System.out.println("There is no path from node " + source + " to node " + dest);
         else
             System.out.println("Distance from node " + source + " to node " + dest + " = " + pairCosts[source][dest]);
     }
