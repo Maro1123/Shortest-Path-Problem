@@ -70,7 +70,7 @@ public class Graph {
             }
             if(!changed) break;
         }
-        return negCycle;
+        return !negCycle;
     }
 
     public boolean floydWarshall(int[][] costs, int[][] parents) {

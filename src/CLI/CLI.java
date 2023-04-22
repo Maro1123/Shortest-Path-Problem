@@ -1,15 +1,9 @@
-import Graph.Graph;
+package CLI;
 
+import Graph.Graph;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Stack;
-
-enum State{
-    INIT,
-    SSSP,
-    FSSSP,
-    APSP
-}
 
 public class CLI {
     State state;
@@ -24,7 +18,13 @@ public class CLI {
     }
 
     void initialize(){
-        System.out.println("Welcome. Please Enter the name of the file that contains the graph data:");
+        System.out.println(" __          __  _                          ");
+        System.out.println(" \\ \\        / / | |                         ");
+        System.out.println("  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___ ");
+        System.out.println("   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\");
+        System.out.println("    \\  /\\  /  __/ | (_| (_) | | | | | |  __/");
+        System.out.println("     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___|");
+        System.out.println("\nPlease Enter the name of the file that contains the graph data:");
         while(true){
             try{
                 currentGraph = new Graph(sc.nextLine());
@@ -52,6 +52,12 @@ public class CLI {
     public void mainMenu(){
         int choice;
         while(true){
+            System.out.println("  __  __       _         __  __                  ");
+            System.out.println(" |  \\/  |     (_)       |  \\/  |                 ");
+            System.out.println(" | \\  / | __ _ _ _ __   | \\  / | ___ _ __  _   _ ");
+            System.out.println(" | |\\/| |/ _` | | '_ \\  | |\\/| |/ _ \\ '_ \\| | | |");
+            System.out.println(" | |  | | (_| | | | | | | |  | |  __/ | | | |_| |");
+            System.out.println(" |_|  |_|\\__,_|_|_| |_| |_|  |_|\\___|_| |_|\\__,_|");
             System.out.println("""
                     
                     Choose the operation you want to run:
@@ -147,7 +153,7 @@ public class CLI {
     // DOES NOT change state from INIT
     public void checkNegativeCycles(){
         int choice;
-        boolean negCycles;
+        boolean noNegativeCycle;
         System.out.println("""
                 
                 Choose the method you would like to run to check if there are negative cycles:
@@ -156,15 +162,15 @@ public class CLI {
         while(true) {
             try{
                 choice = sc.nextInt();
-                if (choice == 1) {negCycles = currentGraph.bellmanFord(0, costs, parents); break;}
-                else if (choice == 2) {negCycles = currentGraph.floydWarshall(pairCosts, pairParents); break;}
+                if (choice == 1) {noNegativeCycle = currentGraph.bellmanFord(0, costs, parents); break;}
+                else if (choice == 2) {noNegativeCycle = currentGraph.floydWarshall(pairCosts, pairParents); break;}
                 else {System.out.println("Invalid input! try again.");}
             }catch (Exception e){
                 System.out.println("Invalid input! try again.");
             }
         }
-        if(negCycles) System.out.println("The graph has negative cycles.");
-        else System.out.println("The graph does not have negative cycles.");
+        if(noNegativeCycle) System.out.println("The graph does not have negative cycles.");
+        else System.out.println("The graph has negative cycles.");
         setArrays();
     }
 

@@ -1,8 +1,10 @@
+package CLI;
+
 import java.util.Scanner;
 
 public class CLIDriver {
     public void run(){
-        int choice, src, dest;
+        int choice, src = 0, dest = 0;
         Scanner sc = new Scanner(System.in);
         CLI cli = new CLI();
         cli.initialize();
@@ -19,8 +21,10 @@ public class CLIDriver {
                             2. Get the shortest path from source to target node
                             3. Main Menu""".indent(1));
                     choice = sc.nextInt();
-                    System.out.print("Enter the target node: ");
-                    dest = sc.nextInt();
+                    if(choice == 1 || choice == 2) {
+                        System.out.print("Enter the target node: ");
+                        dest = sc.nextInt();
+                    }
                     switch (choice) {
                         case 1 -> cli.sourceDistance(dest);
                         case 2 -> cli.sourcePath(dest);
@@ -34,10 +38,12 @@ public class CLIDriver {
                             2. Get the shortest path from one node to another
                             3. Main Menu""".indent(1));
                     choice = sc.nextInt();
-                    System.out.print("Enter the start node: ");
-                    src = sc.nextInt();
-                    System.out.print("Enter the end node: ");
-                    dest = sc.nextInt();
+                    if(choice == 1 || choice == 2) {
+                        System.out.print("Enter the start node: ");
+                        src = sc.nextInt();
+                        System.out.print("Enter the end node: ");
+                        dest = sc.nextInt();
+                    }
                     switch (choice) {
                         case 1 -> cli.pairDistance(src,dest);
                         case 2 -> cli.pairPath(src,dest);
