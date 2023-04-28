@@ -34,15 +34,20 @@ public class Graph {
     public void dijkstra(int source, int[] costs, int[] parents) {
         init(source, costs, parents);
 
+        boolean[] visited = new boolean[size];
+        Arrays.fill(visited,false);
+
         PriorityQueue<Edge> pq = new PriorityQueue<>();
         pq.add(new Edge(source, costs[source]));
+        visited[source]= true;
 
         while (!pq.isEmpty()) {
             Edge cur = pq.poll();
             for (Edge i : adjList[cur.to]) {
-                if(costs[cur.to] != Integer.MAX_VALUE && costs[i.to] > costs[cur.to] + i.weight) {
+                if(costs[cur.to] != Integer.MAX_VALUE && costs[i.to] > costs[cur.to] + i.weight && !visited[i.to]) {
                     costs[i.to] = costs[cur.to] + i.weight;
                     pq.add(new Edge(i.to, costs[i.to]));
+                    visited[i.to] =true;
                     parents[i.to] = cur.to;
                 }
             }
