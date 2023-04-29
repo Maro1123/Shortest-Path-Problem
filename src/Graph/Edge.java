@@ -3,15 +3,18 @@ package Graph;
 public class Edge implements Comparable<Edge>{
 
     final int to;
-    final int weight;
-    public Edge(int to, int weight){
+    final double weight;
+    public Edge(int to, double weight){
         this.to = to;
         this.weight = weight;
     }
 
     @Override
     public int compareTo(Edge o) {
-        return weight - o.weight; //min
+        double diff = Math.round(weight - o.weight);
+        if (Math.abs(diff) < 0.00001) return 0;
+        if (diff < 0) return -1;
+        return 1;
     }
 
 }

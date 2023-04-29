@@ -9,8 +9,10 @@ public class CLI {
     State state;
     Graph currentGraph;
     int singleSource;
-    int[] costs, parents;
-    int[][] pairCosts, pairParents;
+    int[] parents;
+    double[] costs;
+    int[][] pairParents;
+    double[][] pairCosts;
     Scanner sc;
 
     public CLI(){
@@ -39,9 +41,9 @@ public class CLI {
     // Sets state to INIT
     public void setArrays(){
         state = State.INIT;
-        costs = new int[currentGraph.getSize()];
+        costs = new double[currentGraph.getSize()];
         parents = new int[currentGraph.getSize()];
-        pairCosts = new int[currentGraph.getSize()][currentGraph.getSize()];
+        pairCosts = new double[currentGraph.getSize()][currentGraph.getSize()];
         pairParents = new int[currentGraph.getSize()][currentGraph.getSize()];
     }
 
@@ -187,7 +189,7 @@ public class CLI {
     // Get distance from a predefined source to a destination
     public void sourceDistance(int dest) throws Exception{
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
-        int[] c = (state == State.SSSP)? costs : pairCosts[singleSource];
+        double[] c = (state == State.SSSP)? costs : pairCosts[singleSource];
         if(c[dest] == Integer.MAX_VALUE)
             System.out.println("There is no path from node " + singleSource + " to node " + dest);
         else
