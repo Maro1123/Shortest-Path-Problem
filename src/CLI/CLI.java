@@ -13,6 +13,7 @@ public class CLI {
     double[] costs;
     int[][] pairParents;
     double[][] pairCosts;
+    boolean negativeCycles;
     Scanner sc;
 
     public CLI(){
@@ -45,6 +46,7 @@ public class CLI {
         parents = new int[currentGraph.getSize()];
         pairCosts = new double[currentGraph.getSize()][currentGraph.getSize()];
         pairParents = new int[currentGraph.getSize()][currentGraph.getSize()];
+        negativeCycles = false;
     }
 
     public State getState(){return state;}
@@ -71,13 +73,13 @@ public class CLI {
                 choice = sc.nextInt();
                 if (choice == 1) {
                     getShortestPaths();
-                    break;
+                    return;
                 } else if (choice == 2) {
                     getAllShortestPaths();
-                    break;
+                    return;
                 } else if (choice == 3) {
                     checkNegativeCycles();
-                    break;
+                    return;
                 } else if (choice == 4){
                     System.out.println("  ____              ");
                     System.out.println(" |  _ \\                 _____");
@@ -112,10 +114,28 @@ public class CLI {
         while(true) {
             try{
                 choice = sc.nextInt();
-                if (choice == 1) {currentGraph.dijkstra(singleSource, costs, parents); state = State.SSSP; break;}
-                else if (choice == 2) {currentGraph.bellmanFord(singleSource, costs, parents); state = State.SSSP; break;}
-                else if (choice == 3) {currentGraph.floydWarshall(pairCosts, pairParents); state = State.FSSSP; break;}
-                else {System.out.println("Invalid input! try again.");}
+                if (choice == 1) {
+                    if (currentGraph.hasNegativeWeights()){
+                        System.out.println("""
+                                
+                                The input graph has negative edge weights which Dijkstra's algorithm cannot operate on.
+                                Please try using another algorithm.""");
+                    }else {
+                        currentGraph.dijkstra(singleSource, costs, parents);
+                        state = State.SSSP;
+                        return;
+                    }
+                }else if (choice == 2) {
+                    negativeCycles = currentGraph.bellmanFord(singleSource, costs, parents);
+                    state = State.SSSP;
+                    return;
+                }else if (choice == 3) {
+                    negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents);
+                    state = State.FSSSP;
+                    return;
+                }else {
+                    System.out.println("Invalid input! try again.");
+                }
             }catch (Exception e){
                 System.out.println("Invalid input! try again.");
             }
@@ -136,17 +156,24 @@ public class CLI {
             try{
                 choice = sc.nextInt();
                 if (choice == 1) {
-                    for (int i=0 ; i<currentGraph.getSize() ; i++)
-                        currentGraph.dijkstra(i, pairCosts[i], pairParents[i]);
-                    break;
+                    if (currentGraph.hasNegativeWeights()){
+                        System.out.println("""
+                                
+                                The input graph has negative edge weights which Dijkstra's algorithm cannot operate on.
+                                Please try using another algorithm or using a different graph.""");
+                    }else{
+                        for (int i = 0; i < currentGraph.getSize(); i++)
+                            currentGraph.dijkstra(i, pairCosts[i], pairParents[i]);
+                        break;
+                    }
                 }
                 else if (choice == 2) {
                     for (int i=0 ; i<currentGraph.getSize() ; i++)
-                        currentGraph.bellmanFord(i, pairCosts[i], pairParents[i]);
+                        negativeCycles = currentGraph.bellmanFord(i, pairCosts[i], pairParents[i]);
                     break;
                 }
                 else if (choice == 3) {
-                    currentGraph.floydWarshall(pairCosts, pairParents);
+                    negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents);
                     break;
                 }
                 else {
@@ -163,7 +190,6 @@ public class CLI {
     // DOES NOT change state from INIT
     public void checkNegativeCycles(){
         int choice;
-        boolean noNegativeCycle;
         System.out.println("""
                 
                 Choose the method you would like to run to check if there are negative cycles:
@@ -172,14 +198,14 @@ public class CLI {
         while(true) {
             try{
                 choice = sc.nextInt();
-                if (choice == 1) {noNegativeCycle = currentGraph.bellmanFord(0, costs, parents); break;}
-                else if (choice == 2) {noNegativeCycle = currentGraph.floydWarshall(pairCosts, pairParents); break;}
+                if (choice == 1) {negativeCycles = currentGraph.bellmanFord(0, costs, parents); break;}
+                else if (choice == 2) {negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents); break;}
                 else {System.out.println("Invalid input! try again.");}
             }catch (Exception e){
                 System.out.println("Invalid input! try again.");
             }
         }
-        if(noNegativeCycle) System.out.println("The graph does not have negative cycles.");
+        if(!negativeCycles) System.out.println("The graph does not have negative cycles.");
         else System.out.println("The graph has negative cycles.");
         setArrays();
     }
@@ -188,7 +214,14 @@ public class CLI {
 
     // Get distance from a predefined source to a destination
     public void sourceDistance(int dest) throws Exception{
-        if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
+        if (negativeCycles) {
+            System.out.println("""
+                    
+                    Algorithm yielded incorrect results because graph contains negative cycles.
+                    Restart the application with a new graph if you wish to run the algorithm.""");
+            return;
+        }
+        if (dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         double[] c = (state == State.SSSP)? costs : pairCosts[singleSource];
         if(c[dest] == Integer.MAX_VALUE)
             System.out.println("There is no path from node " + singleSource + " to node " + dest);
@@ -198,6 +231,13 @@ public class CLI {
 
     // Get distance from any source to any destination
     public void pairDistance(int source, int dest) throws Exception{
+        if (negativeCycles) {
+            System.out.println("""
+                    
+                    Algorithm yielded incorrect results because graph contains negative cycles.
+                    Restart the application with a new graph if you wish to run the algorithm.""");
+            return;
+        }
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         if(source<0 || source>=currentGraph.getSize()) throw new Exception();
         if(pairCosts[source][dest] == Integer.MAX_VALUE)
@@ -208,6 +248,13 @@ public class CLI {
 
     // Get path from a predefined source to a destination
     public void sourcePath(int dest) throws Exception{
+        if (negativeCycles) {
+            System.out.println("""
+                    
+                    Algorithm yielded incorrect results because graph contains negative cycles.
+                    Restart the application with a new graph if you wish to run the algorithm.""");
+            return;
+        }
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         int[] p = (state == State.SSSP)? parents : pairParents[singleSource];
         Stack<Integer> path = new Stack<>();
@@ -230,6 +277,13 @@ public class CLI {
 
     // Get path from any source to any destination
     public void pairPath(int source, int dest) throws Exception{
+        if (negativeCycles) {
+            System.out.println("""
+                    
+                    Algorithm yielded incorrect results because graph contains negative cycles.
+                    Restart the application with a new graph if you wish to run the algorithm.""");
+            return;
+        }
         if(dest<0 || dest>=currentGraph.getSize()) throw new Exception();
         if(source<0 || source>=currentGraph.getSize()) throw new Exception();
         Stack<Integer> path = new Stack<>();

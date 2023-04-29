@@ -11,11 +11,13 @@ public class Graph {
 
     private final ArrayList<Edge>[] adjList;
     private final int size;
+    private boolean negWeights;
 
     public Graph(String filename) throws FileNotFoundException {
         Scanner scan = new Scanner(new File(filename));
         int v, e, start, dest;
         double w;
+        negWeights = false;
         v = scan.nextInt();
         adjList = new ArrayList[v];
         for (int i = 0; i < v; i++) {
@@ -27,6 +29,7 @@ public class Graph {
             start = scan.nextInt();
             dest = scan.nextInt();
             w = scan.nextDouble();
+            if (w<0) negWeights = true;
             adjList[start].add(new Edge(dest, w));
         }
         scan.close();
@@ -45,7 +48,7 @@ public class Graph {
         while (!pq.isEmpty()) {
             Edge cur = pq.poll();
             for (Edge i : adjList[cur.to]) {
-                if(costs[cur.to] != Integer.MAX_VALUE && costs[i.to] > costs[cur.to] + i.weight && !visited[i.to]) {
+                if(costs[cur.to] != Double.POSITIVE_INFINITY && costs[i.to] > costs[cur.to] + i.weight && !visited[i.to]) {
                     costs[i.to] = costs[cur.to] + i.weight;
                     pq.add(new Edge(i.to, costs[i.to]));
                     visited[i.to] =true;
@@ -53,6 +56,10 @@ public class Graph {
                 }
             }
         }
+    }
+
+    public boolean hasNegativeWeights(){
+        return negWeights;
     }
 
     public boolean bellmanFord(int source, double[] costs, int[] parents) {
@@ -66,7 +73,7 @@ public class Graph {
                 for(Edge edge: adjList[j]) { // neighbours
                     int u = edge.to;
                     double w = edge.weight;
-                    if(costs[j] != Integer.MAX_VALUE && costs[j] + w < costs[u]) {
+                    if(costs[j] != Double.POSITIVE_INFINITY && costs[j] + w < costs[u]) {
                         changed = true;
                         if(i == size - 1)
                             negCycle = true;
@@ -86,7 +93,7 @@ public class Graph {
         for (int k = 0; k < size; k++) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if (costs[i][k] != Integer.MAX_VALUE && costs[k][j] != Integer.MAX_VALUE && costs[i][k] + costs[k][j] < costs[i][j]) {
+                    if (costs[i][k] != Double.POSITIVE_INFINITY && costs[k][j] != Double.POSITIVE_INFINITY && costs[i][k] + costs[k][j] < costs[i][j]) {
                         costs[i][j] = costs[i][k] + costs[k][j];
                         parents[i][j] = parents[k][j];
                     }
@@ -100,14 +107,14 @@ public class Graph {
     }
 
     private void init(int source, double[] costs, int[] parents) {
-        Arrays.fill(costs, Double.MAX_VALUE);
+        Arrays.fill(costs, Double.POSITIVE_INFINITY);
         costs[source] = 0;
         Arrays.fill(parents, -1);
     }
 
     private void floyd_init(double[][] costs, int[][] parents) {
         for(double[] arr : costs)
-            Arrays.fill(arr, Double.MAX_VALUE);
+            Arrays.fill(arr, Double.POSITIVE_INFINITY);
         for(int[] arr : parents)
             Arrays.fill(arr, -1);
         for(int i = 0; i < size; i++) {

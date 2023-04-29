@@ -7,5 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GraphTest {
     @Test
     void sampleTestDijkstra(){
+
     }
 }
