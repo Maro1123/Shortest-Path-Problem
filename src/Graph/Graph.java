@@ -39,7 +39,6 @@ public class Graph {
         init(source, costs, parents);
 
         boolean[] visited = new boolean[size];
-        Arrays.fill(visited,false);
 
         PriorityQueue<Edge> pq = new PriorityQueue<>();
         pq.add(new Edge(source, costs[source]));

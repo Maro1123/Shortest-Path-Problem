@@ -21,6 +21,7 @@ public class CLI {
     }
 
     void initialize(){
+        String filename;
         System.out.println(" __          __  _                          ");
         System.out.println(" \\ \\        / / | |                         ");
         System.out.println("  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___ ");
@@ -30,7 +31,8 @@ public class CLI {
         System.out.println("\nPlease Enter the name of the file that contains the graph data:");
         while(true){
             try{
-                currentGraph = new Graph(sc.nextLine());
+                filename = sc.nextLine();
+                currentGraph = new Graph(filename);
                 break;
             }catch (FileNotFoundException e){
                 System.out.println("File not found, please try again.");
@@ -126,11 +128,11 @@ public class CLI {
                         return;
                     }
                 }else if (choice == 2) {
-                    negativeCycles = currentGraph.bellmanFord(singleSource, costs, parents);
+                    negativeCycles = !currentGraph.bellmanFord(singleSource, costs, parents);
                     state = State.SSSP;
                     return;
                 }else if (choice == 3) {
-                    negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents);
+                    negativeCycles = !currentGraph.floydWarshall(pairCosts, pairParents);
                     state = State.FSSSP;
                     return;
                 }else {
@@ -169,11 +171,11 @@ public class CLI {
                 }
                 else if (choice == 2) {
                     for (int i=0 ; i<currentGraph.getSize() ; i++)
-                        negativeCycles = currentGraph.bellmanFord(i, pairCosts[i], pairParents[i]);
+                        negativeCycles = !currentGraph.bellmanFord(i, pairCosts[i], pairParents[i]);
                     break;
                 }
                 else if (choice == 3) {
-                    negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents);
+                    negativeCycles = !currentGraph.floydWarshall(pairCosts, pairParents);
                     break;
                 }
                 else {
@@ -198,8 +200,8 @@ public class CLI {
         while(true) {
             try{
                 choice = sc.nextInt();
-                if (choice == 1) {negativeCycles = currentGraph.bellmanFord(0, costs, parents); break;}
-                else if (choice == 2) {negativeCycles = currentGraph.floydWarshall(pairCosts, pairParents); break;}
+                if (choice == 1) {negativeCycles = !currentGraph.bellmanFord(0, costs, parents); break;}
+                else if (choice == 2) {negativeCycles = !currentGraph.floydWarshall(pairCosts, pairParents); break;}
                 else {System.out.println("Invalid input! try again.");}
             }catch (Exception e){
                 System.out.println("Invalid input! try again.");
@@ -270,8 +272,9 @@ public class CLI {
         }while(current != singleSource);
         path.push(singleSource);
         //Pop the path back in correct order
-        System.out.print("Shortest path from node " + singleSource + " to node " + dest + ": ");
+        System.out.println("Shortest path from node " + singleSource + " to node " + dest + ": ");
         while(!path.empty()) System.out.print(path.pop() + (path.size() > 0 ? " -> " : ""));
+        System.out.print("\nwith distance = " + costs[dest]);
         System.out.println();
     }
 
@@ -299,8 +302,9 @@ public class CLI {
         }while(current != source);
         path.push(source);
         //Pop the path back in correct order
-        System.out.print("Shortest path from node " + source + " to node " + dest + ": ");
+        System.out.println("Shortest path from node " + source + " to node " + dest + ": ");
         while(!path.empty()) System.out.print(path.pop() + (path.size() > 0 ? " -> " : ""));
+        System.out.print("\nwith distance = " + pairCosts[source][dest]);
         System.out.println();
     }
 }
