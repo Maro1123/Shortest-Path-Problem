@@ -40,17 +40,16 @@ public class Graph {
 
         boolean[] visited = new boolean[size];
 
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        PriorityQueue<Edge> pq = new PriorityQueue<>( (Edge A,Edge B) -> Double.compare(A.weight,B.weight) );
         pq.add(new Edge(source, costs[source]));
-        visited[source]= true;
 
         while (!pq.isEmpty()) {
             Edge cur = pq.poll();
+            visited[cur.to]= true;
             for (Edge i : adjList[cur.to]) {
                 if(costs[cur.to] != Double.POSITIVE_INFINITY && costs[i.to] > costs[cur.to] + i.weight && !visited[i.to]) {
                     costs[i.to] = costs[cur.to] + i.weight;
                     pq.add(new Edge(i.to, costs[i.to]));
-                    visited[i.to] =true;
                     parents[i.to] = cur.to;
                 }
             }
