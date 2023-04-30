@@ -33,7 +33,11 @@ public class Graph {
     }
 
     public void dijkstra(int source, double[] costs, int[] parents) {
-        if(negWeights) return;
+        if(negWeights) {
+            Arrays.fill(costs,Double.POSITIVE_INFINITY);
+            Arrays.fill(parents,-1);
+            return;
+        }
 
         init(source, costs, parents);
 
