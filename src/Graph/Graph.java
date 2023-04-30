@@ -2,10 +2,7 @@ package Graph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Graph {
 
@@ -36,11 +33,13 @@ public class Graph {
     }
 
     public void dijkstra(int source, double[] costs, int[] parents) {
+        if(negWeights) return;
+
         init(source, costs, parents);
 
         boolean[] visited = new boolean[size];
 
-        PriorityQueue<Edge> pq = new PriorityQueue<>( (Edge A,Edge B) -> Double.compare(A.weight,B.weight) );
+        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingDouble((Edge A) -> A.weight));
         pq.add(new Edge(source, costs[source]));
 
         while (!pq.isEmpty()) {
@@ -119,6 +118,8 @@ public class Graph {
             costs[i][i] = 0;
             parents[i][i] = -1;
             for(Edge edge : adjList[i]) {
+                if(i == edge.to && edge.weight >= 0) //exclude the positive self cycles
+                    continue;
                 parents[i][edge.to] = i;
                 costs[i][edge.to] = edge.weight;
             }
