@@ -42,15 +42,19 @@ public class Graph {
         init(source, costs, parents);
 
         boolean[] visited = new boolean[size];
-
+        // Here we're using Edge only as an encapsulation of a node's index and the shortest distance
+        // between it and the source being the weight.
         PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingDouble((Edge A) -> A.weight));
         pq.add(new Edge(source, costs[source]));
 
         while (!pq.isEmpty()) {
             Edge cur = pq.poll();
-            visited[cur.to]= true;
+            // May pop an old non-optimal distance for a visited node, and if it is visited,
+            // the iteration is skipped, and we pop the next minimum distance node.
+            if (visited[cur.to]) continue;
+            visited[cur.to] = true;
             for (Edge i : adjList[cur.to]) {
-                if(costs[cur.to] != Double.POSITIVE_INFINITY && costs[i.to] > costs[cur.to] + i.weight && !visited[i.to]) {
+                if(!visited[i.to] && costs[i.to] > costs[cur.to] + i.weight) {
                     costs[i.to] = costs[cur.to] + i.weight;
                     pq.add(new Edge(i.to, costs[i.to]));
                     parents[i.to] = cur.to;

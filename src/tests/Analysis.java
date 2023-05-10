@@ -1,10 +1,27 @@
 package tests;
 
+import Graph.Graph;
 import org.junit.jupiter.api.Test;
+
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Analysis {
+
+    public static void main(String[] args) throws FileNotFoundException {
+        for(int cnt = 10 ; cnt <= 400 ; cnt+=10) {
+            Graph graph = new Graph("DataGeneratorAndAnalyzer/dense_analysis_graphs/" + cnt + "_graph.txt");
+            long start = System.nanoTime();
+            for (int i=0 ; i<20 ; i++)
+                for (int j=0 ; j<200 ; j++)
+                    graph.bellmanFord(j, new double[200], new int[200]);
+            long end = System.nanoTime();
+            long elapsed = (end - start)/20;
+            System.out.println(elapsed);
+        }
+    }
+
     @Test
     void space() throws IOException {
         try {
