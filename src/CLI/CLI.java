@@ -200,7 +200,13 @@ public class CLI {
         while(true) {
             try{
                 choice = sc.nextInt();
-                if (choice == 1) {negativeCycles = !currentGraph.bellmanFord(0, costs, parents); break;}
+                if (choice == 1) {
+                    for (int i=0 ; i<currentGraph.getSize() ; i++) {
+                        negativeCycles = !currentGraph.bellmanFord(i, costs, parents);
+                        if (negativeCycles) break;
+                    }
+                    break;
+                }
                 else if (choice == 2) {negativeCycles = !currentGraph.floydWarshall(pairCosts, pairParents); break;}
                 else {System.out.println("Invalid input! try again.");}
             }catch (Exception e){
